@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>キーボードショートカット体験トレーニング</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#1f2937;
+      --muted:#667085;
+      --line:#d9dee8;
+      --accent:#2563eb;
+      --accent2:#0f766e;
+      --danger:#dc2626;
+      --warn:#b45309;
+      --ok:#15803d;
+      --shadow:0 14px 32px rgba(15,23,42,.10);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+    body{min-height:100vh}
+    header{background:linear-gradient(135deg,#111827,#1d4ed8);color:white;padding:32px 20px 28px}
+    .wrap{max-width:1120px;margin:0 auto}
+    .hero{display:grid;grid-template-columns:1.35fr .65fr;gap:24px;align-items:center}
+    h1{margin:0;font-size:clamp(1.65rem,3vw,2.8rem);line-height:1.2;letter-spacing:.02em}
+    .lead{margin:14px 0 0;color:#dbeafe;font-size:1.02rem}
+    .hero-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:18px;border-radius:20px;backdrop-filter:blur(8px)}
+    .hero-card strong{font-size:2.6rem;line-height:1;display:block}
+    .hero-card span{display:block;color:#dbeafe;margin-top:6px}
+    main{padding:24px 20px 56px}
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:start}
+    .side{position:sticky;top:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .scorebox{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .scoreitem{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+    .scoreitem b{display:block;font-size:1.35rem;color:#111827}
+    .scoreitem span{font-size:.78rem;color:var(--muted)}
+    .progress{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0 16px}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#14b8a6);transition:.25s}
+    nav{display:grid;gap:8px}
+    nav button{appearance:none;border:1px solid var(--line);background:white;color:var(--text);border-radius:14px;padding:10px 12px;text-align:left;cursor:pointer;font-weight:700;transition:.15s}
+    nav button:hover{border-color:#93c5fd;background:#eff6ff}
+    nav button.active{border-color:var(--accent);background:#dbeafe;color:#1e40af}
+    nav button.done::after{content:" ✓";color:var(--ok);float:right}
+    .tools{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:grid;gap:8px}
+    .tools button,.primary,.ghost{appearance:none;border:0;border-radius:14px;padding:11px 14px;font-weight:800;cursor:pointer}
+    .primary{background:var(--accent);color:white;box-shadow:0 8px 16px rgba(37,99,235,.22)}
+    .ghost{background:#eef2ff;color:#1e3a8a;border:1px solid #c7d2fe}
+    .danger{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:14px;padding:11px 14px;font-weight:800;cursor:pointer}
+    .content{display:grid;gap:18px}
+    .section{display:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .section.active{display:block}
+    .section-head{padding:20px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fafc)}
+    .section-head h2{margin:0;font-size:1.35rem}
+    .section-head p{margin:6px 0 0;color:var(--muted)}
+    .section-body{padding:22px}
+    .task{border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0;background:#fff}
+    .task-title{display:flex;gap:10px;align-items:center;margin:0 0 10px;font-size:1.05rem}
+    .badge{display:inline-grid;place-items:center;min-width:30px;height:30px;border-radius:999px;background:#e0f2fe;color:#075985;font-weight:900;font-size:.9rem}
+    .kbd{display:inline-flex;align-items:center;gap:3px;background:#111827;color:white;border-radius:8px;padding:4px 8px;font-weight:900;font-size:.9em;box-shadow:inset 0 -2px rgba(255,255,255,.14);white-space:nowrap}
+    .hint{background:#fffbeb;border:1px solid #fde68a;color:#78350f;border-radius:14px;padding:10px 12px;font-size:.94rem;margin:12px 0}
+    .note{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;border-radius:14px;padding:10px 12px;font-size:.94rem;margin:12px 0}
+    .warn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:14px;padding:10px 12px;font-size:.94rem;margin:12px 0}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{display:block;font-weight:800;margin:10px 0 6px}
+    textarea,input[type="text"]{width:100%;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;background:#fff;color:var(--text)}
+    textarea{min-height:110px;resize:vertical}
+    .source-box{border:1px dashed #94a3b8;border-radius:14px;padding:14px;background:#f8fafc;user-select:text}
+    .source-box .select-target{font-weight:900;color:#1d4ed8;background:#dbeafe;border-radius:8px;padding:0 4px}
+    .drop-box{min-height:120px;border:2px dashed #cbd5e1;border-radius:14px;padding:14px;background:#fff;outline:none}
+    .drop-box:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+    .status{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:6px 10px;font-size:.9rem;font-weight:800;color:#475569}
+    .chip.ok{border-color:#86efac;background:#dcfce7;color:#166534}
+    .chip.ng{border-color:#fecaca;background:#fee2e2;color:#991b1b}
+    .fake-app{border:1px solid #cbd5e1;border-radius:16px;overflow:hidden;background:white}
+    .fake-toolbar{display:flex;gap:8px;align-items:center;background:#f1f5f9;border-bottom:1px solid #cbd5e1;padding:9px 12px;color:#475569;font-size:.9rem}
+    .dot{width:10px;height:10px;border-radius:50%;background:#cbd5e1;display:inline-block}
+    .fake-doc{padding:16px;min-height:120px;outline:none}
+    .targetword{background:#fde68a;border-radius:6px;padding:0 3px}
+    .mini-keyboard{display:grid;grid-template-columns:repeat(9,1fr);gap:8px;margin:12px 0;max-width:640px}
+    .key{border:1px solid #94a3b8;background:#fff;border-radius:10px;min-height:44px;display:grid;place-items:center;font-weight:900;box-shadow:0 3px 0 #cbd5e1}
+    .key.wide{grid-column:span 2}.key.active{background:#dbeafe;border-color:#2563eb;color:#1e40af;transform:translateY(2px);box-shadow:0 1px 0 #93c5fd}.key.ok{background:#dcfce7;border-color:#22c55e;color:#166534}
+    .cursor-stage{border:1px solid var(--line);border-radius:16px;background:#f8fafc;padding:18px;overflow:auto}
+    .cursor-line{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:1.6rem;letter-spacing:.04em;white-space:pre;display:inline-block;background:white;border:1px solid #e5e7eb;border-radius:12px;padding:12px;min-width:100%}
+    .char{display:inline-block;min-width:.72em;text-align:center;position:relative;border-radius:4px}
+    .char.sel{background:#bfdbfe;color:#1e3a8a}
+    .char.caret::before{content:"";position:absolute;left:-2px;top:0;bottom:0;width:3px;background:#111827;border-radius:999px;animation:blink .9s steps(2,start) infinite}
+    .end-caret{display:inline-block;width:3px;height:1.4em;vertical-align:-.25em;background:#111827;border-radius:999px;animation:blink .9s steps(2,start) infinite}
+    @keyframes blink{50%{opacity:0}}
+    .search-bar{display:none;gap:8px;margin-bottom:12px;align-items:center;background:#eef2ff;border:1px solid #c7d2fe;border-radius:14px;padding:10px}
+    .search-bar.show{display:flex}.search-bar input{flex:1;margin:0}.match{background:#fde68a;border-radius:5px;padding:0 3px}.print-preview{display:none;border:1px solid #cbd5e1;background:#f8fafc;border-radius:16px;padding:16px;margin-top:12px}.print-preview.show{display:block}.paper{background:white;max-width:460px;margin:auto;border:1px solid #e5e7eb;border-radius:10px;padding:18px;box-shadow:0 8px 18px rgba(15,23,42,.12)}
+    .finish{background:linear-gradient(135deg,#ecfdf5,#eff6ff);border:1px solid #bfdbfe;border-radius:18px;padding:20px;text-align:center}
+    .bigscore{font-size:3rem;font-weight:900;color:#0f766e;line-height:1}.small{font-size:.9rem;color:var(--muted)}
+    table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid var(--line);padding:10px;text-align:left}th{background:#f8fafc}
+    .teacher{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:14px}
+    .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:860px){.hero{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.side{position:relative;top:auto}.grid2{grid-template-columns:1fr}.mini-keyboard{grid-template-columns:repeat(5,1fr)}.cursor-line{font-size:1.3rem}.section-body{padding:16px}.section-head{padding:16px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <div>
+      <h1>キーボードショートカット<br>体験トレーニング</h1>
+      <p class="lead">コピー、貼り付け、元に戻す、カーソル移動、保存、印刷、検索を、ブラウザ上のミッション形式で練習します。</p>
+    </div>
+    <div class="hero-card" aria-label="学習概要">
+      <strong id="heroCount">0/8</strong>
+      <span>クリアしたミッション</span>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="wrap layout">
+    <aside class="side" aria-label="進行状況">
+      <div class="scorebox">
+        <div class="scoreitem"><b id="doneCount">0</b><span>クリア数</span></div>
+        <div class="scoreitem"><b id="scoreCount">0</b><span>スコア</span></div>
+      </div>
+      <div class="progress" aria-label="進捗"><div class="bar" id="progressBar"></div></div>
+      <nav id="nav"></nav>
+      <div class="tools">
+        <button class="ghost" id="resetCurrent">このミッションをリセット</button>
+        <button class="danger" id="resetAll">全リセット</button>
+      </div>
+    </aside>
+
+    <div class="content">
+      <section class="section active" id="sec-intro" data-title="はじめに">
+        <div class="section-head"><h2>はじめに</h2><p>マウス操作だけでなく、キーボードを使って操作する感覚を身につけます。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">準備</span>この教材の使い方</h3>
+            <p>左のメニューから順番にミッションを進めます。指定されたキー操作ができると、自動でクリア判定されます。</p>
+            <div class="hint">Windowsでは <span class="kbd">Ctrl</span> キーを押しながら別のキーを押す操作がよく使われます。ChromebookやMacではキー配置や動作が異なる場合があります。</div>
+            <table aria-label="練習するショートカット一覧">
+              <thead><tr><th>操作</th><th>ショートカット</th><th>練習内容</th></tr></thead>
+              <tbody>
+                <tr><td>コピー</td><td><span class="kbd">Ctrl</span> + <span class="kbd">C</span></td><td>選んだ文字を一時的に覚える</td></tr>
+                <tr><td>貼り付け</td><td><span class="kbd">Ctrl</span> + <span class="kbd">V</span></td><td>覚えた文字を別の場所に入れる</td></tr>
+                <tr><td>元に戻す</td><td><span class="kbd">Ctrl</span> + <span class="kbd">Z</span></td><td>直前の操作を取り消す</td></tr>
+                <tr><td>カーソル移動</td><td><span class="kbd">←</span> <span class="kbd">→</span> <span class="kbd">↑</span> <span class="kbd">↓</span></td><td>文字入力位置を動かす</td></tr>
+                <tr><td>範囲選択</td><td><span class="kbd">Shift</span> + <span class="kbd">矢印</span></td><td>キーボードで文字を選ぶ</td></tr>
+                <tr><td>保存・印刷・検索</td><td><span class="kbd">Ctrl</span> + <span class="kbd">S</span> / <span class="kbd">P</span> / <span class="kbd">F</span></td><td>よく使う基本操作を体験する</td></tr>
+              </tbody>
+            </table>
+            <button class="primary" data-go="copy">開始する</button>
+          </div>
+          <div class="teacher">
+            <strong>授業での扱い方</strong>
+            <p class="small">5〜10分の導入、10〜15分の個別練習、最後に「どの操作が一番役立ちそうか」を振り返らせる構成を想定しています。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-copy" data-title="コピー＆貼り付け">
+        <div class="section-head"><h2>1. コピー＆貼り付け</h2><p>文字を選択し、Ctrl + Cでコピー、Ctrl + Vで貼り付けます。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">1</span>指定された文字をコピーする</h3>
+            <p>下の文章から <strong>「文化祭のお知らせ」</strong> だけをドラッグして選択し、<span class="kbd">Ctrl</span> + <span class="kbd">C</span> を押します。</p>
+            <div class="source-box" id="copySource">先生からの連絡です。今日中に <span class="select-target">文化祭のお知らせ</span> をクラスルームへ掲載してください。</div>
+            <div class="status"><span class="chip" id="copyChip">コピー：未完了</span></div>
+          </div>
+          <div class="task">
+            <h3 class="task-title"><span class="badge">2</span>貼り付け先にペーストする</h3>
+            <p>下の枠をクリックしてから、<span class="kbd">Ctrl</span> + <span class="kbd">V</span> を押します。</p>
+            <label for="pasteTarget">貼り付け先</label>
+            <div class="drop-box" id="pasteTarget" contenteditable="true" role="textbox" aria-label="貼り付け先"></div>
+            <div class="status"><span class="chip" id="pasteChip">貼り付け：未完了</span></div>
+            <button class="ghost" id="clearPaste">貼り付け先を消す</button>
+          </div>
+          <button class="primary next" data-go="undo">次へ</button>
+        </div>
+      </section>
+
+      <section class="section" id="sec-undo" data-title="元に戻す">
+        <div class="section-head"><h2>2. 元に戻す</h2><p>誤って編集しても、Ctrl + Zで直前の状態に戻せます。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">1</span>文章を一度編集する</h3>
+            <p>下のメモから何文字か削除するか、文字を追加してください。その後、<span class="kbd">Ctrl</span> + <span class="kbd">Z</span> を押します。</p>
+            <div class="fake-app">
+              <div class="fake-toolbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><strong>メモアプリ</strong><span id="undoState">未編集</span></div>
+              <textarea id="undoArea" spellcheck="false">明日の持ち物：筆記用具、ノート、USBメモリ</textarea>
+            </div>
+            <div class="status"><span class="chip" id="editChip">編集：未完了</span><span class="chip" id="undoChip">元に戻す：未完了</span></div>
+          </div>
+          <div class="note">ポイント：入力ミス、削除ミス、書式設定のミスなどを戻すときに使います。</div>
+          <button class="primary next" data-go="cursor">次へ</button>
+        </div>
+      </section>
+
+      <section class="section" id="sec-cursor" data-title="カーソル移動">
+        <div class="section-head"><h2>3. カーソル移動</h2><p>矢印キーで入力位置を動かし、Shift + 矢印で範囲を選択します。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">1</span>矢印キーでカーソルを動かす</h3>
+            <p>枠をクリックしてから、<span class="kbd">→</span> を3回以上、<span class="kbd">←</span> を1回以上押してください。</p>
+            <div class="cursor-stage" id="cursorStage" tabindex="0" aria-label="カーソル移動練習エリア">
+              <div class="cursor-line" id="cursorLine"></div>
+            </div>
+            <div class="mini-keyboard" aria-hidden="true">
+              <div class="key wide" id="keyShift">Shift</div><div class="key" id="keyLeft">←</div><div class="key" id="keyRight">→</div><div class="key" id="keyUp">↑</div><div class="key" id="keyDown">↓</div>
+            </div>
+            <div class="status"><span class="chip" id="rightChip">右移動：0/3</span><span class="chip" id="leftChip">左移動：0/1</span></div>
+          </div>
+          <div class="task">
+            <h3 class="task-title"><span class="badge">2</span>Shift + 矢印で文字を選択する</h3>
+            <p><span class="kbd">Shift</span> を押しながら <span class="kbd">→</span> または <span class="kbd">←</span> を押し、3文字以上を青く選択してください。</p>
+            <div class="status"><span class="chip" id="selectChip">範囲選択：0/3文字</span></div>
+          </div>
+          <button class="primary next" data-go="save">次へ</button>
+        </div>
+      </section>
+
+      <section class="section" id="sec-save" data-title="上書き保存">
+        <div class="section-head"><h2>4. 上書き保存</h2><p>Ctrl + Sで作業内容を保存します。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">1</span>メモを編集して保存する</h3>
+            <p>下のメモに1文字以上入力し、<span class="kbd">Ctrl</span> + <span class="kbd">S</span> を押してください。</p>
+            <textarea id="saveArea" spellcheck="false">今日覚えたショートカット：</textarea>
+            <div class="status"><span class="chip" id="saveEditChip">編集：未完了</span><span class="chip" id="saveChip">保存：未完了</span></div>
+          </div>
+          <div class="warn">ブラウザでは通常、Ctrl + Sを押すとページ保存が動きます。この教材ではページ保存を止め、アプリ内の「保存体験」として扱っています。</div>
+          <button class="primary next" data-go="search">次へ</button>
+        </div>
+      </section>
+
+      <section class="section" id="sec-search" data-title="検索">
+        <div class="section-head"><h2>5. 検索</h2><p>Ctrl + Fで検索欄を出し、文章の中から目的の語を探します。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">1</span>検索欄を開く</h3>
+            <p><span class="kbd">Ctrl</span> + <span class="kbd">F</span> を押してください。検索欄が表示されたら「AI」と入力します。</p>
+            <div class="search-bar" id="customSearch"><strong>検索</strong><input type="text" id="searchInput" placeholder="検索語を入力"><span id="matchCount" class="small"></span></div>
+            <div class="fake-app">
+              <div class="fake-toolbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><strong>資料</strong></div>
+              <div class="fake-doc" id="searchDoc">情報社会では、必要な情報をすばやく探す力が重要です。AI、セキュリティ、著作権、データ活用など、情報Ⅰでは多くのキーワードを扱います。検索機能を使うと、長い文章の中からAIのような特定の語句を見つけやすくなります。</div>
+            </div>
+            <div class="status"><span class="chip" id="openSearchChip">検索欄：未完了</span><span class="chip" id="searchWordChip">検索語：未完了</span></div>
+          </div>
+          <button class="primary next" data-go="print">次へ</button>
+        </div>
+      </section>
+
+      <section class="section" id="sec-print" data-title="印刷">
+        <div class="section-head"><h2>6. 印刷</h2><p>Ctrl + Pで印刷操作を呼び出します。</p></div>
+        <div class="section-body">
+          <div class="task">
+            <h3 class="task-title"><span class="badge">1</span>印刷プレビューを開く</h3>
+            <p><span class="kbd">Ctrl</span> + <span class="kbd">P</span> を押してください。この教材では実際の印刷画面ではなく、模擬プレビューを表示します。</p>
+            <div class="print-preview" id="printPreview">
+              <div class="paper">
+                <h3>印刷プレビュー</h3>
+                <p>キーボードショートカット体験トレーニング</p>
+                <ul>
+                  <li>コピー：Ctrl + C</li>
+                  <li>貼り付け：Ctrl + V</li>
+                  <li>元に戻す：Ctrl + Z</li>
+                  <li>印刷：Ctrl + P</li>
+                </ul>
+              </div>
+            </div>
+            <div class="status"><span class="chip" id="printChip">印刷：未完了</span></div>
+          </div>
+          <button class="primary next" data-go="finish">結果を見る</button>
+        </div>
+      </section>
+
+      <section class="section" id="sec-finish" data-title="まとめ">
+        <div class="section-head"><h2>まとめ</h2><p>基本ショートカットの体験結果を確認します。</p></div>
+        <div class="section-body">
+          <div class="finish">
+            <div class="bigscore"><span id="finalScore">0</span>点</div>
+            <p id="finalMessage">結果を集計しています。</p>
+            <button class="primary" id="recalc">結果を更新</button>
+          </div>
+          <div class="task">
+            <h3 class="task-title"><span class="badge">振</span>振り返り</h3>
+            <label for="reflection1">1. 今日使った中で、今後一番使いそうなショートカットはどれですか。</label>
+            <textarea id="reflection1" placeholder="例：Ctrl + Z。入力ミスをすぐ戻せるから。"></textarea>
+            <label for="reflection2">2. マウス操作と比べて、ショートカットのよい点は何ですか。</label>
+            <textarea id="reflection2" placeholder="例：キーボードから手を離さずに操作できる。"></textarea>
+            <button class="ghost" id="copyReflection">振り返りをコピー</button>
+            <div class="status"><span class="chip" id="reflectionChip">コピー：未完了</span></div>
+          </div>
+          <div class="teacher">
+            <strong>先生用メモ</strong>
+            <p class="small">このHTMLは1ファイルで動作します。Google DriveやGitHub Pagesに配置すれば、生徒用端末からアクセスできます。生徒の回答を集計したい場合は、最後の振り返りをGoogleフォームに置き換える運用が簡単です。</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<script>
+(() => {
+  const missions = [
+    {id:'intro', title:'はじめに', scoring:false},
+    {id:'copy', title:'コピー＆貼り付け', tasks:['copy','paste']},
+    {id:'undo', title:'元に戻す', tasks:['edit','undo']},
+    {id:'cursor', title:'カーソル移動', tasks:['right','left','select']},
+    {id:'save', title:'上書き保存', tasks:['saveEdit','save']},
+    {id:'search', title:'検索', tasks:['openSearch','searchWord']},
+    {id:'print', title:'印刷', tasks:['print']},
+    {id:'finish', title:'まとめ', scoring:false}
+  ];
+  const allTasks = missions.flatMap(m => m.tasks || []);
+  const state = {
+    completed: Object.fromEntries(allTasks.map(k => [k, false])),
+    internalClipboard: '',
+    rightCount: 0,
+    leftCount: 0,
+    cursorPos: 0,
+    anchorPos: null,
+    cursorText: '情報の授業で使う便利な操作',
+    undoOriginal: '明日の持ち物：筆記用具、ノート、USBメモリ',
+    undoEditedOnce: false,
+    saveOriginal: '今日覚えたショートカット：'
+  };
+
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const nav = $('#nav');
+
+  function renderNav(){
+    nav.innerHTML = '';
+    missions.forEach(m => {
+      const btn = document.createElement('button');
+      btn.textContent = m.title;
+      btn.dataset.go = m.id;
+      if(isMissionDone(m)) btn.classList.add('done');
+      if($(`#sec-${m.id}`)?.classList.contains('active')) btn.classList.add('active');
+      nav.appendChild(btn);
+    });
+  }
+
+  function isMissionDone(m){
+    if(!m.tasks) return false;
+    return m.tasks.every(t => state.completed[t]);
+  }
+
+  function setDone(task, done=true){
+    if(!(task in state.completed)) return;
+    state.completed[task] = done;
+    updateChips();
+    updateProgress();
+    renderNav();
+  }
+
+  function updateChips(){
+    const map = {
+      copyChip:['copy','コピー：完了','コピー：未完了'],
+      pasteChip:['paste','貼り付け：完了','貼り付け：未完了'],
+      editChip:['edit','編集：完了','編集：未完了'],
+      undoChip:['undo','元に戻す：完了','元に戻す：未完了'],
+      saveEditChip:['saveEdit','編集：完了','編集：未完了'],
+      saveChip:['save','保存：完了','保存：未完了'],
+      openSearchChip:['openSearch','検索欄：完了','検索欄：未完了'],
+      searchWordChip:['searchWord','検索語：完了','検索語：未完了'],
+      printChip:['print','印刷：完了','印刷：未完了']
+    };
+    Object.entries(map).forEach(([id,[task,ok,ng]]) => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.textContent = state.completed[task] ? ok : ng;
+      el.classList.toggle('ok', state.completed[task]);
+      el.classList.toggle('ng', !state.completed[task]);
+    });
+    const right = $('#rightChip');
+    right.textContent = state.completed.right ? '右移動：完了' : `右移動：${Math.min(state.rightCount,3)}/3`;
+    right.classList.toggle('ok', state.completed.right);
+    const left = $('#leftChip');
+    left.textContent = state.completed.left ? '左移動：完了' : `左移動：${Math.min(state.leftCount,1)}/1`;
+    left.classList.toggle('ok', state.completed.left);
+    const selLen = getSelectionLength();
+    const select = $('#selectChip');
+    select.textContent = state.completed.select ? '範囲選択：完了' : `範囲選択：${Math.min(selLen,3)}/3文字`;
+    select.classList.toggle('ok', state.completed.select);
+  }
+
+  function updateProgress(){
+    const done = Object.values(state.completed).filter(Boolean).length;
+    const total = allTasks.length;
+    const score = Math.round(done / total * 100);
+    $('#doneCount').textContent = done;
+    $('#scoreCount').textContent = score;
+    $('#heroCount').textContent = `${done}/${total}`;
+    $('#progressBar').style.width = `${score}%`;
+    $('#finalScore').textContent = score;
+    $('#finalMessage').textContent = score === 100 ? 'すべてのミッションをクリアしました。' : `あと${total-done}項目で全クリアです。`;
+  }
+
+  function go(id){
+    $$('.section').forEach(s => s.classList.remove('active'));
+    $(`#sec-${id}`)?.classList.add('active');
+    renderNav();
+    if(id === 'cursor') setTimeout(() => $('#cursorStage').focus(), 50);
+    if(id === 'finish') updateProgress();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('[data-go]');
+    if(target) go(target.dataset.go);
+  });
+
+  function flashKey(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.add('active');
+    setTimeout(() => el.classList.remove('active'), 180);
+  }
+
+  // Copy / Paste
+  document.addEventListener('keydown', e => {
+    const key = e.key.toLowerCase();
+    if(e.ctrlKey && key === 'c') {
+      const selection = String(window.getSelection()).trim();
+      if(selection === '文化祭のお知らせ') {
+        e.preventDefault();
+        state.internalClipboard = selection;
+        setDone('copy');
+      }
+    }
+    if(e.ctrlKey && key === 'v') {
+      const active = document.activeElement;
+      if(active && active.id === 'pasteTarget') {
+        e.preventDefault();
+        if(state.internalClipboard) {
+          active.textContent += state.internalClipboard;
+          if(active.textContent.includes('文化祭のお知らせ')) setDone('paste');
+        }
+      }
+    }
+    if(e.ctrlKey && key === 'z') {
+      const area = $('#undoArea');
+      if(document.activeElement === area) {
+        e.preventDefault();
+        if(state.undoEditedOnce) {
+          area.value = state.undoOriginal;
+          $('#undoState').textContent = '元に戻しました';
+          setDone('undo');
+        }
+      }
+    }
+    if(e.ctrlKey && key === 's') {
+      const area = $('#saveArea');
+      if(document.activeElement === area || $('#sec-save').classList.contains('active')) {
+        e.preventDefault();
+        if(state.completed.saveEdit) setDone('save');
+      }
+    }
+    if(e.ctrlKey && key === 'f') {
+      if($('#sec-search').classList.contains('active')) {
+        e.preventDefault();
+        $('#customSearch').classList.add('show');
+        $('#searchInput').focus();
+        setDone('openSearch');
+      }
+    }
+    if(e.ctrlKey && key === 'p') {
+      if($('#sec-print').classList.contains('active')) {
+        e.preventDefault();
+        $('#printPreview').classList.add('show');
+        setDone('print');
+      }
+    }
+  });
+
+  $('#clearPaste').addEventListener('click', () => {
+    $('#pasteTarget').textContent = '';
+    setDone('paste', false);
+  });
+
+  // Undo
+  $('#undoArea').addEventListener('input', e => {
+    if(e.target.value !== state.undoOriginal) {
+      state.undoEditedOnce = true;
+      $('#undoState').textContent = '編集中';
+      setDone('edit');
+      setDone('undo', false);
+    }
+  });
+
+  // Cursor practice
+  function getSelectionLength(){
+    if(state.anchorPos === null) return 0;
+    return Math.abs(state.cursorPos - state.anchorPos);
+  }
+  function renderCursor(){
+    const text = state.cursorText;
+    const a = state.anchorPos === null ? state.cursorPos : state.anchorPos;
+    const start = Math.min(a, state.cursorPos);
+    const end = Math.max(a, state.cursorPos);
+    const line = $('#cursorLine');
+    line.innerHTML = '';
+    for(let i=0;i<text.length;i++){
+      const span = document.createElement('span');
+      span.className = 'char';
+      if(i >= start && i < end) span.classList.add('sel');
+      if(i === state.cursorPos) span.classList.add('caret');
+      span.textContent = text[i];
+      line.appendChild(span);
+    }
+    if(state.cursorPos === text.length){
+      const endCaret = document.createElement('span');
+      endCaret.className = 'end-caret';
+      line.appendChild(endCaret);
+    }
+    if(getSelectionLength() >= 3) setDone('select');
+    updateChips();
+  }
+  $('#cursorStage').addEventListener('keydown', e => {
+    const max = state.cursorText.length;
+    let handled = false;
+    if(['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)) {
+      handled = true;
+      if(e.key === 'ArrowRight') { state.cursorPos = Math.min(max, state.cursorPos + 1); state.rightCount++; flashKey('keyRight'); }
+      if(e.key === 'ArrowLeft') { state.cursorPos = Math.max(0, state.cursorPos - 1); state.leftCount++; flashKey('keyLeft'); }
+      if(e.key === 'ArrowUp') { state.cursorPos = 0; flashKey('keyUp'); }
+      if(e.key === 'ArrowDown') { state.cursorPos = max; flashKey('keyDown'); }
+      if(e.shiftKey) {
+        if(state.anchorPos === null) {
+          // Anchor should be the previous position before the movement.
+          if(e.key === 'ArrowRight') state.anchorPos = Math.max(0, state.cursorPos - 1);
+          else if(e.key === 'ArrowLeft') state.anchorPos = Math.min(max, state.cursorPos + 1);
+          else state.anchorPos = state.cursorPos;
+        }
+        flashKey('keyShift');
+      } else {
+        state.anchorPos = null;
+      }
+      if(state.rightCount >= 3) setDone('right');
+      if(state.leftCount >= 1) setDone('left');
+      renderCursor();
+    }
+    if(handled) e.preventDefault();
+  });
+
+  // Save
+  $('#saveArea').addEventListener('input', e => {
+    if(e.target.value !== state.saveOriginal) setDone('saveEdit');
+  });
+
+  // Search
+  const originalSearchDoc = $('#searchDoc').textContent;
+  $('#searchInput').addEventListener('input', e => {
+    const q = e.target.value.trim();
+    if(!q){
+      $('#searchDoc').textContent = originalSearchDoc;
+      $('#matchCount').textContent = '';
+      setDone('searchWord', false);
+      return;
+    }
+    const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(esc, 'gi');
+    let count = 0;
+    $('#searchDoc').innerHTML = originalSearchDoc.replace(re, m => {count++; return `<span class="match">${m}</span>`;});
+    $('#matchCount').textContent = `${count}件`;
+    if(q.toLowerCase() === 'ai' && count > 0) setDone('searchWord');
+  });
+
+  // Reflection copy
+  $('#copyReflection').addEventListener('click', async () => {
+    const text = `【振り返り】\n1. ${$('#reflection1').value}\n2. ${$('#reflection2').value}`;
+    try{
+      await navigator.clipboard.writeText(text);
+      $('#reflectionChip').textContent = 'コピー：完了';
+      $('#reflectionChip').classList.add('ok');
+    }catch(err){
+      const tmp = document.createElement('textarea');
+      tmp.value = text;
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand('copy');
+      tmp.remove();
+      $('#reflectionChip').textContent = 'コピー：完了';
+      $('#reflectionChip').classList.add('ok');
+    }
+  });
+
+  // Reset
+  function resetCurrent(){
+    const active = $('.section.active').id.replace('sec-','');
+    const m = missions.find(x => x.id === active);
+    if(!m || !m.tasks) return;
+    m.tasks.forEach(t => setDone(t,false));
+    if(active === 'copy') { $('#pasteTarget').textContent=''; state.internalClipboard=''; }
+    if(active === 'undo') { $('#undoArea').value=state.undoOriginal; state.undoEditedOnce=false; $('#undoState').textContent='未編集'; }
+    if(active === 'cursor') { state.rightCount=0; state.leftCount=0; state.cursorPos=0; state.anchorPos=null; renderCursor(); }
+    if(active === 'save') { $('#saveArea').value=state.saveOriginal; }
+    if(active === 'search') { $('#customSearch').classList.remove('show'); $('#searchInput').value=''; $('#searchDoc').textContent=originalSearchDoc; $('#matchCount').textContent=''; }
+    if(active === 'print') { $('#printPreview').classList.remove('show'); }
+    updateChips(); updateProgress(); renderNav();
+  }
+  $('#resetCurrent').addEventListener('click', resetCurrent);
+  $('#resetAll').addEventListener('click', () => {
+    Object.keys(state.completed).forEach(t => state.completed[t]=false);
+    state.internalClipboard=''; state.rightCount=0; state.leftCount=0; state.cursorPos=0; state.anchorPos=null; state.undoEditedOnce=false;
+    $('#pasteTarget').textContent=''; $('#undoArea').value=state.undoOriginal; $('#undoState').textContent='未編集'; $('#saveArea').value=state.saveOriginal;
+    $('#customSearch').classList.remove('show'); $('#searchInput').value=''; $('#searchDoc').textContent=originalSearchDoc; $('#matchCount').textContent=''; $('#printPreview').classList.remove('show');
+    $('#reflection1').value=''; $('#reflection2').value=''; $('#reflectionChip').textContent='コピー：未完了'; $('#reflectionChip').classList.remove('ok');
+    renderCursor(); updateChips(); updateProgress(); renderNav(); go('intro');
+  });
+  $('#recalc').addEventListener('click', updateProgress);
+
+  renderCursor();
+  updateChips();
+  updateProgress();
+  renderNav();
+})();
+</script>
+</body>
+</html>
